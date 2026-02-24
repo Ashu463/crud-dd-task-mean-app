@@ -4,32 +4,24 @@ services:
 
   mongodb:
     image: mongo:7
-    restart: always
     volumes:
       - mongo-data:/data/db
 
   backend:
-    image: ashuk971/mean-backend:latest
-    restart: always
+    build: ./backend
+    ports:
+      - "5000:5000"
     environment:
       - MONGO_URI=mongodb://mongodb:27017/mean_db
     depends_on:
       - mongodb
 
   frontend:
-    image: ashuk971/mean-frontend:latest
-    restart: always
+    build: ./frontend
+    ports:
+      - "4200:80"
     depends_on:
       - backend
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - frontend
 
 volumes:
   mongo-data:
