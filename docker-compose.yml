@@ -9,7 +9,7 @@ services:
       - mongo-data:/data/db
 
   backend:
-    image: yourdockerhubusername/mean-backend:latest
+    image: ashuk971/mean-backend:latest
     restart: always
     environment:
       - MONGO_URI=mongodb://mongodb:27017/mean_db
@@ -17,7 +17,7 @@ services:
       - mongodb
 
   frontend:
-    image: yourdockerhubusername/mean-frontend:latest
+    image: ashuk971/mean-frontend:latest
     restart: always
     depends_on:
       - backend

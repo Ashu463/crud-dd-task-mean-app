@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Backend
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mean-backend:latest ./backend
+
+      - name: Build Frontend
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mean-frontend:latest ./frontend
+
+      - name: Push Images
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/mean-backend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/mean-frontend:latest
+
+      - name: Deploy to VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ubuntu
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            cd mean-deploy-task
+            docker compose pull
+            docker compose down
+            docker compose up -d
