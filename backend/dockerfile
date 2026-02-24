@@ -1,0 +1,19 @@
+# backend/dockerfile
+
+FROM node:18-alpine
+
+# Create app directory
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy app source
+COPY . .
+
+# Expose backend port (change if different)
+EXPOSE 8080
+
+# Start the server
+CMD ["node", "server.js"]

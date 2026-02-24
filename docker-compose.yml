@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+
+  mongodb:
+    image: mongo:7
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    image: yourdockerhubusername/mean-backend:latest
+    restart: always
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/mean_db
+    depends_on:
+      - mongodb
+
+  frontend:
+    image: yourdockerhubusername/mean-frontend:latest
+    restart: always
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+
+volumes:
+  mongo-data:
