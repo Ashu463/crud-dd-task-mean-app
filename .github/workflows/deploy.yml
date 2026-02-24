@@ -32,11 +32,11 @@ jobs:
       - name: Deploy to VM
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.VM_HOST }}
-          username: ubuntu
-          key: ${{ secrets.VM_SSH_KEY }}
-          script: |
-            cd mean-deploy-task
-            docker compose pull
-            docker compose down
-            docker compose up -d
+            host: ${{ secrets.VM_HOST }}
+            username: ubuntu
+            key: ${{ secrets.VM_SSH_KEY }}
+            script: |
+                cd crud-dd-task-mean-app
+                docker compose pull
+                docker compose down
+                docker compose up -d
